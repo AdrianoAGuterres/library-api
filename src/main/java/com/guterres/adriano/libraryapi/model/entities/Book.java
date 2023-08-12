@@ -10,8 +10,7 @@ import lombok.*;
 @Entity
 @Table
 
-
-public class Book {
+public class Book{
     @Column
     private String title;
     @Column
@@ -22,4 +21,5 @@ public class Book {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
 }

@@ -7,38 +7,49 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class BookService implements IBookService {
 
-    private IBookRepository repository;
+    private IBookRepository iBookRepository;
 
     public BookService(IBookRepository repository) {
-        this.repository = repository;
+        this.iBookRepository = repository;
     }
 
     @Override
     public Book save(Book book) {
-        if( repository.existsByIsbn(book.getIsbn()) ){
+        if( iBookRepository.existsByIsbn(book.getIsbn()) ){
             throw new BusinessException("ISBN já cadastrado!");
         }
-        return repository.save(book);
+        return iBookRepository.save(book);
     }
 
     @Override
     public Optional<Book> getById(Long id) {
-        return this.repository.findById(id);
+        return this.iBookRepository.findById(id);
     }
 
     @Override
     public void delete(Book book) {
-
+        if (Objects.isNull(book)){
+            throw new NullPointerException("O Livro não pode ser nulo!");
+        } else if (book.getId() == 0){
+            throw new IllegalArgumentException("O id não do Livro não pode ser menor que 1!");
+        }
+        this.iBookRepository.delete(book);
     }
 
     @Override
     public Book update(Book book) {
-        return null;
+        if (Objects.isNull(book)){
+            throw new NullPointerException("O Livro não pode ser nulo!");
+        } else if (book.getId() == 0){
+            throw new IllegalArgumentException("O id não do Livro não pode ser menor que 1!");
+        }
+        return this.iBookRepository.save(book);
     }
 
     @Override
